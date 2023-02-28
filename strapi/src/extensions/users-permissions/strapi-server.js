@@ -98,6 +98,8 @@ module.exports = (plugin) => {
                     secure: false,
                     signed: true,
                     overwrite: true,
+                    domain: 'localhost',
+                    // sameSite: 'none',
                 });
                 ctx.send({
                     status: 'Authenticated',
@@ -174,6 +176,8 @@ module.exports = (plugin) => {
                 secure: false,
                 signed: true,
                 overwrite: true,
+                domain: 'localhost',
+                // sameSite: 'none',
             });
             ctx.send({
                 jwt: issueJWT({ id: obj.id }, { expiresIn: '15m' }),
