@@ -2,6 +2,7 @@ import Head from 'next/head'
 import Image from 'next/image'
 import styles from '@/styles/Home.module.css'
 import Link from 'next/link'
+import Header from '@/layout/Header/Header'
 
 export default function Profile() {
     return (
@@ -13,12 +14,17 @@ export default function Profile() {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <main className={styles.main}>
-                <Link
-                    href={process.env.NEXT_PUBLIC_DOMAIN + "/"}
-                >
-                    HOME
-                </Link>
+                <Header />
+
             </main>
         </>
     )
+}
+
+export async function getServerSideProps(context) {
+    console.log(context);
+
+    return {
+        props: {}, // will be passed to the page component as props
+    }
 }

@@ -5,13 +5,16 @@ import Link from 'next/link'
 import axios from 'axios'
 import { InputHTMLAttributes, useRef, useState } from 'react'
 import { useRouter } from 'next/router'
+import { useAuth } from '@/context/AuthContext'
+import Header from '@/layout/Header/Header'
 
 export default function Login() {
-    const emailRef = useRef(null);
-    const passwordRef = useRef(null);
+    const { login, refresh, getUser, user, accessToken } = useAuth();
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    // const [accessToken, setAccessToken] = useState('');
+
     const router = useRouter();
 
     const getEmail = (event: React.FormEvent<HTMLInputElement>) => {
@@ -27,34 +30,10 @@ export default function Login() {
     }
 
 
-    const submitHandler = async (e) => {
+    const submitHandler = async (e: any) => {
         e.preventDefault();
-        // const data = await axios.post('http://localhost:1337/api/auth/local', { identifier: email, password: password })
-        const data = await axios({
-            method: 'POST',
-            url: 'http://localhost:1337/api/auth/local',
-            withCredentials: true,
-            data: {
-                identifier: email,
-                password: password
-            }
-        });
-        console.log('submit');
-        console.log(data);
-        if (data.status === 200) {
-            router.push('/profile')
-        }
-    }
-
-    const refresh = async () => {
-        // const data = await axios.post('http://localhost:1337/api/token/refresh');
-        const data = await axios({
-            method: 'POST',
-            url: 'http://localhost:1337/api/token/refresh',
-            withCredentials: true
-        });
-        console.log(data);
-        console.log('refresh');
+        const res = await login(email, password);
+        if (res === 200) router.push('/profile');
     }
 
     return (
@@ -66,11 +45,8 @@ export default function Login() {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <main className={styles.main}>
-                <Link
-                    href={process.env.NEXT_PUBLIC_DOMAIN + "/"}
-                >
-                    HOME
-                </Link>
+                <Header />
+
                 <form className={styles.form} onSubmit={(e) => submitHandler(e)}>
                     <label htmlFor="email">
                         email
@@ -87,7 +63,6 @@ export default function Login() {
                         password
                         <input
                             className={styles.input}
-                            ref={passwordRef}
                             type="password"
                             name="password"
                             id="password"
@@ -104,7 +79,13 @@ export default function Login() {
                 </form>
                 <hr />
                 <button onClick={refresh}>refresh</button>
+                <button onClick={() => accessToken && getUser(accessToken)}>getUser</button>
+                <hr />
+                <span>{JSON.stringify(accessToken, null, 4)}</span>
+                <span>{JSON.stringify(user, null, 4)}</span>
             </main>
         </>
     )
 }
+
+

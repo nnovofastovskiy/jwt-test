@@ -180,7 +180,7 @@ module.exports = (plugin) => {
                 // sameSite: 'none',
             });
             ctx.send({
-                jwt: issueJWT({ id: obj.id }, { expiresIn: '15m' }),
+                jwt: issueJWT({ id: obj.id }, { expiresIn: '1m' }),
                 refreshToken: refreshToken,
             });
         }
